@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { FileUploadIcon, PlusIcon, XIcon } from './icons'
+import { FileUploadIcon, PlusIcon, SpinnerIcon, XIcon } from './icons'
 
 const ACCEPTED_EXTENSIONS = ['.xlsx', '.csv']
 const MAX_FILE_SIZE = 500 * 1024 * 1024 // 500MB
@@ -27,11 +27,13 @@ function validateFile(file) {
   return null
 }
 
-export default function UploadZone({ onFileAccepted }) {
+export default function UploadZone({ onFileAccepted, isUploading = false, uploadError = '' }) {
   const inputRef = useRef(null)
   const [isDragging, setIsDragging] = useState(false)
   const [file, setFile] = useState(null)
   const [error, setError] = useState('')
+
+  const shownError = uploadError || error
 
   const acceptFile = (candidate) => {
     if (!candidate) return
@@ -49,6 +51,7 @@ export default function UploadZone({ onFileAccepted }) {
   const handleDrop = (dropEvent) => {
     dropEvent.preventDefault()
     setIsDragging(false)
+    if (isUploading) return
     acceptFile(dropEvent.dataTransfer.files?.[0])
   }
 
@@ -63,6 +66,7 @@ export default function UploadZone({ onFileAccepted }) {
   }
 
   const handleBrowseClick = () => {
+    if (isUploading) return
     inputRef.current?.click()
   }
 
@@ -89,7 +93,10 @@ export default function UploadZone({ onFileAccepted }) {
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
-        className={`flex cursor-pointer flex-col items-center rounded-2xl border-2 border-dashed px-6 py-8 text-center transition-colors ${
+        aria-busy={isUploading}
+        className={`flex flex-col items-center rounded-2xl border-2 border-dashed px-6 py-8 text-center transition-colors ${
+          isUploading ? 'cursor-wait opacity-70' : 'cursor-pointer'
+        } ${
           isDragging
             ? 'border-blue-500 bg-blue-500/5'
             : 'border-transparent hover:border-white/10'
@@ -99,6 +106,7 @@ export default function UploadZone({ onFileAccepted }) {
           ref={inputRef}
           type="file"
           accept={ACCEPTED_EXTENSIONS.join(',')}
+          disabled={isUploading}
           onChange={handleFileInputChange}
           className="hidden"
         />
@@ -121,13 +129,27 @@ export default function UploadZone({ onFileAccepted }) {
             selectFilesClickEvent.stopPropagation()
             handleBrowseClick()
           }}
-          className="mt-7 flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 text-sm font-bold tracking-wide text-white uppercase transition-colors hover:bg-blue-500"
+          disabled={isUploading}
+          className="mt-7 flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 text-sm font-bold tracking-wide text-white uppercase transition-colors hover:bg-blue-500 disabled:cursor-wait disabled:bg-blue-600/50"
         >
-          <PlusIcon className="h-4 w-4" />
-          Select files
+          {isUploading ? (
+            <>
+              <SpinnerIcon className="h-4 w-4 animate-spin" />
+              Procesando
+            </>
+          ) : (
+            <>
+              <PlusIcon className="h-4 w-4" />
+              Select files
+            </>
+          )}
         </button>
 
-        {error && <p className="mt-4 text-sm font-medium text-red-400">{error}</p>}
+        {shownError && (
+          <p role="alert" className="mt-4 text-sm font-medium text-red-400">
+            {shownError}
+          </p>
+        )}
 
         {file && (
           <div
@@ -141,6 +163,7 @@ export default function UploadZone({ onFileAccepted }) {
             <button
               type="button"
               aria-label="Remove file"
+              disabled={isUploading}
               onClick={handleRemoveFileClick}
               className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-white/10 hover:text-slate-200"
             >

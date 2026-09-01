@@ -77,3 +77,92 @@ export function XIcon(props) {
     </svg>
   )
 }
+
+export function SpinnerIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" {...base} strokeWidth={2.2} {...props}>
+      <path d="M12 3a9 9 0 1 0 9 9" />
+    </svg>
+  )
+}
+
+export function TableIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" {...base} {...props}>
+      <rect x="3" y="4" width="18" height="16" rx="2" />
+      <path d="M3 9.5h18M9 9.5V20" />
+    </svg>
+  )
+}
+
+export function RowsIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" {...base} {...props}>
+      <rect x="3" y="4" width="18" height="16" rx="2" />
+      <path d="M3 9.5h18M3 14.5h18" />
+    </svg>
+  )
+}
+
+export function ColumnsIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" {...base} {...props}>
+      <rect x="3" y="4" width="18" height="16" rx="2" />
+      <path d="M9.5 4v16M14.5 4v16" />
+    </svg>
+  )
+}
+
+export function AlertTriangleIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" {...base} {...props}>
+      <path d="M10.3 4.3 2.8 17a2 2 0 0 0 1.7 3h15a2 2 0 0 0 1.7-3l-7.5-12.7a2 2 0 0 0-3.4 0Z" />
+      <path d="M12 9.5v4M12 17h.01" />
+    </svg>
+  )
+}
+
+export function CopyIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" {...base} {...props}>
+      <rect x="9" y="9" width="12" height="12" rx="2" />
+      <path d="M5 15V5a2 2 0 0 1 2-2h10" />
+    </svg>
+  )
+}
+
+export function ChipIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" {...base} {...props}>
+      <rect x="7" y="7" width="10" height="10" rx="1.5" />
+      <path d="M10 3v4M14 3v4M10 17v4M14 17v4M3 10h4M3 14h4M17 10h4M17 14h4" />
+    </svg>
+  )
+}
+
+export function RefreshIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" {...base} {...props}>
+      <path d="M20 11A8 8 0 0 0 6.3 6.3L4 8.5" />
+      <path d="M4 4v4.5h4.5" />
+      <path d="M4 13a8 8 0 0 0 13.7 4.7L20 15.5" />
+      <path d="M20 20v-4.5h-4.5" />
+    </svg>
+  )
+}
+
+export function ChevronLeftIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" {...base} strokeWidth={2} {...props}>
+      <path d="M14.5 6 9 12l5.5 6" />
+    </svg>
+  )
+}
+
+export function ChevronRightIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" {...base} strokeWidth={2} {...props}>
+      <path d="M9.5 6 15 12l-5.5 6" />
+    </svg>
+  )
+}
