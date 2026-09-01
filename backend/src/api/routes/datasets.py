@@ -1,6 +1,7 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException
 import uuid
 from src.services.ingest import Dataset
+from src.services.serialization import records
 from src.core.cache import cache
 from src.schemas.dataset import UploadResponse
 from src.exceptions import *
@@ -16,7 +17,7 @@ async def upload_dataset(file: UploadFile = File(...)):
         
         return UploadResponse(
             dataset_id= dataset_id,
-            dataframe= dataset.dict(),
+            dataframe= records(dataset.df()),
             preview= f"http://127.0.0.1:8000/datasets/{dataset_id}/preview",
             full= f"http://127.0.0.1:8000/datasets/{dataset_id}/full"
         )
@@ -30,11 +31,11 @@ async def dataset_preview(dataset_id: str):
     if dataset_id not in cache:
         raise HTTPException(status_code=404, detail="Dataset not found...")
     df = cache[dataset_id]
-    return df.head().to_dict(orient="records")
+    return records(df.head())
 
 @router.get("/datasets/{dataset_id}/full")
 async def dataset_preview(dataset_id: str):
     if dataset_id not in cache:
         raise HTTPException(status_code=404, detail="Dataset not found...")
     df = cache[dataset_id]
-    return df.to_dict(orient="records")
+    return records(df)
