@@ -1,7 +1,2 @@
-backend/src/services/__pycache__
-backend/src/__pycache__
-backend/src/__pycache__/main.cpython-313.pyc
-backend/src/core/__pycache__/cache.cpython-313.pyc
-backend/src/api/routes/__pycache__/datasets.cpython-313.pyc
-
-backend/src/schemas/__pycache__/dataset.cpython-313.pyc
+__pycache__/
+*.pyc
