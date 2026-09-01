@@ -13,9 +13,9 @@ El proyecto se desarrolla por fases:
 
 - **Fase 1 — Ingesta**: subida de archivos, conversión a `DataFrame`, endpoints de
   carga y consulta (`POST /datasets`, `GET /datasets/{id}/preview`, `GET /datasets/{id}/full`).
-- **Fase 2 — Descriptiva**: estadísticas descriptivas por columna numérica (media,
+- **Fase 2 — Descriptiva (pendiente)**: estadísticas descriptivas por columna numérica (media,
   mediana, moda, varianza, desviación estándar, mínimo/máximo, cuartiles, IQR y
-  coeficiente de variación) vía `GET /datasets/{id}/summary`.
+  coeficiente de variación) (endpoint `/datasets/{id}/summary` aún no implementado).
 
 ## Integrantes
 
