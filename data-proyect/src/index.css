@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background-color: #080b14;
+  color-scheme: dark;
+}
+
+/* Tokens de visualizacion. La app es dark-only, asi que se definen una sola vez.
+   Estos pasos estan validados contra la superficie #0a0e1a: los cuatro tipos
+   pasan banda de luminosidad, piso de croma, separacion CVD y contraste >= 3:1. */
+:root {
+  --viz-numeric: #3987e5;
+  --viz-categorical: #d95926;
+  --viz-datetime: #199e70;
+  --viz-boolean: #9085e9;
+  --viz-empty: #898781;
+  --viz-critical: #d03b3b;
+}
