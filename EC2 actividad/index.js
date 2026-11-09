@@ -7,6 +7,13 @@ function respuesta(res, codigo, datos) {
     res.end(JSON.stringify(datos, null));
 }
 
+function procesarNotas() {
+        let t = 0;
+        for (let i = 0; i < d.length; i++) { t = t + d[i]; }
+        let p = t / d.length;
+        return p;
+}
+
 const s = http.createServer((req, res) => {
 
     if (req.url === '/salud') {
@@ -14,13 +21,11 @@ const s = http.createServer((req, res) => {
     }
 
     if (req.url === '/equipo') {
-        return respuesta(res, 200, { equipo: 'Equipo NN', integrantes: ['Nombre Uno', 'Nombre Dos'] });
+        return respuesta(res, 200, { equipo: 'Equipo 67', integrantes: ['Daniel Maldonado', 'Juan Gonzalez', 'Juan Turizo'] });
     }
 
     if (req.url === '/notas') {
-        let t = 0;
-        for (let i = 0; i < d.length; i++) { t = t + d[i]; }
-        let p = t / d.length;
+        let p = procesarNotas()
 
         return respuesta(res, 200, { promedio: p, aprobado: p >= 3.0 });
     }
