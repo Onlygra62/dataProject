@@ -7,12 +7,11 @@ function respuesta(res, codigo, datos) {
     res.end(JSON.stringify(datos, null));
 }
 
-function procesarNotas() {
-        let t = 0;
-        for (let i = 0; i < d.length; i++) { t = t + d[i]; }
-        let p = t / d.length;
-        return p;
+function calcularPromedio(notas) {
+    return notas.reduce((suma, n) => suma + n, 0) / notas.length;
 }
+
+function estaAprobado(promedio) { return promedio >= 3.0; }
 
 const s = http.createServer((req, res) => {
 
@@ -25,9 +24,9 @@ const s = http.createServer((req, res) => {
     }
 
     if (req.url === '/notas') {
-        let p = procesarNotas()
+        let p = calcularPromedio(d)
 
-        return respuesta(res, 200, { promedio: p, aprobado: p >= 3.0 });
+        return respuesta(res, 200, { promedio: p, aprobado: estaAprobado(p) });
     }
 
     respuesta(res, 404, { error: 'Ruta no encontrada' });
