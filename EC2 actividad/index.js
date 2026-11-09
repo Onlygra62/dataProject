@@ -2,19 +2,19 @@ const http = require('http');
 
 const d = [4.5, 3.5, 2.5, 4.0];
 
+function respuesta(res, codigo, datos) {
+    res.writeHead(codigo, { 'Content-Type': 'application/json; charset=utf-8' })
+    res.end(JSON.stringify(datos, null));
+}
+
 const s = http.createServer((req, res) => {
 
     if (req.url === '/salud') {
-        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-        res.end(JSON.stringify({ estado: 'ok' }));
-        return;
+        return respuesta(res, 200, { estado: 'ok' });
     }
 
     if (req.url === '/equipo') {
-        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-        res.end(JSON.stringify({ equipo: 'Equipo NN',
-        integrantes: ['Nombre Uno', 'Nombre Dos'] }));
-        return;
+        return respuesta(res, 200, { equipo: 'Equipo NN', integrantes: ['Nombre Uno', 'Nombre Dos'] });
     }
 
     if (req.url === '/notas') {
@@ -22,13 +22,10 @@ const s = http.createServer((req, res) => {
         for (let i = 0; i < d.length; i++) { t = t + d[i]; }
         let p = t / d.length;
 
-        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-        res.end(JSON.stringify({ promedio: p, aprobado: p >= 3.0 }));
-        return;
+        return respuesta(res, 200, { promedio: p, aprobado: p >= 3.0 });
     }
 
-    res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
-    res.end(JSON.stringify({ error: 'Ruta no encontrada' }));
+    respuesta(res, 404, { error: 'Ruta no encontrada' });
 });
 
 s.listen(80);
