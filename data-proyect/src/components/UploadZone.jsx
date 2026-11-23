@@ -1,16 +1,9 @@
 import { useRef, useState } from 'react'
+import { formatBytes } from '../lib/format'
 import { FileUploadIcon, PlusIcon, SpinnerIcon, XIcon } from './icons'
 
 const ACCEPTED_EXTENSIONS = ['.xlsx', '.csv']
 const MAX_FILE_SIZE = 500 * 1024 * 1024 // 500MB
-
-function formatBytes(bytes) {
-  if (bytes === 0) return '0 B'
-  const units = ['B', 'KB', 'MB', 'GB']
-  const exponent = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1)
-  const value = bytes / 1024 ** exponent
-  return `${value.toFixed(exponent === 0 ? 0 : 1)} ${units[exponent]}`
-}
 
 function getExtension(filename) {
   const dotIndex = filename.lastIndexOf('.')
