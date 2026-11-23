@@ -10,6 +10,7 @@ import {
 import { buildDistribution } from '../../lib/bins'
 import { isBlank } from '../../lib/profile'
 import { formatCount } from '../../lib/format'
+import Card from '../ui/Card'
 import { BAR_STYLE, barOptions } from './chartTheme'
 
 // Chart.js v4 no registra nada por defecto: solo lo que usamos.
@@ -44,12 +45,12 @@ export default function DistributionChart({ columnProfile, rows }) {
 
   if (distribution.type === 'empty') {
     return (
-      <div className="rounded-2xl border border-white/10 bg-white/3 p-6">
+      <Card className="p-6">
         <h3 className="text-sm font-semibold text-slate-200">{title}</h3>
         <p className="mt-8 mb-8 text-center text-sm text-slate-500">
           Todas las filas están vacías en esta columna.
         </p>
-      </div>
+      </Card>
     )
   }
 
@@ -68,7 +69,7 @@ export default function DistributionChart({ columnProfile, rows }) {
     : 300
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/3 p-6">
+    <Card className="p-6">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h3 className="text-sm font-semibold text-slate-200">{title}</h3>
         <p className="text-xs text-slate-500 tabular-nums">
@@ -81,6 +82,6 @@ export default function DistributionChart({ columnProfile, rows }) {
       </div>
 
       <p className="mt-4 text-xs text-slate-500">{CAPTIONS[distribution.type]}</p>
-    </div>
+    </Card>
   )
 }

@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { formatBytes } from '../lib/format'
 import { FileUploadIcon, PlusIcon, SpinnerIcon, XIcon } from './icons'
+import Button from './ui/Button'
 
 const ACCEPTED_EXTENSIONS = ['.xlsx', '.csv']
 const MAX_FILE_SIZE = 500 * 1024 * 1024 // 500MB
@@ -116,14 +117,14 @@ export default function UploadZone({ onFileAccepted, isUploading = false, upload
           Maximum file size: 500MB.
         </p>
 
-        <button
-          type="button"
+        <Button
+          size="lg"
+          className="mt-7"
           onClick={(selectFilesClickEvent) => {
             selectFilesClickEvent.stopPropagation()
             handleBrowseClick()
           }}
           disabled={isUploading}
-          className="mt-7 flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 text-sm font-bold tracking-wide text-white uppercase transition-colors hover:bg-blue-500 disabled:cursor-wait disabled:bg-blue-600/50"
         >
           {isUploading ? (
             <>
@@ -136,7 +137,7 @@ export default function UploadZone({ onFileAccepted, isUploading = false, upload
               Select files
             </>
           )}
-        </button>
+        </Button>
 
         {shownError && (
           <p role="alert" className="mt-4 text-sm font-medium text-red-400">

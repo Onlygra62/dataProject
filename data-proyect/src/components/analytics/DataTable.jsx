@@ -1,8 +1,23 @@
 import { useState } from 'react'
 import { ChevronLeftIcon, ChevronRightIcon } from '../icons'
 import { formatCell, formatCount } from '../../lib/format'
+import Card from '../ui/Card'
 
 const PAGE_SIZE = 25
+
+function PageButton({ label, disabled, onClick, children }) {
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      disabled={disabled}
+      onClick={onClick}
+      className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-300 transition-colors hover:bg-white/10 disabled:cursor-not-allowed disabled:text-slate-600 disabled:hover:bg-transparent"
+    >
+      {children}
+    </button>
+  )
+}
 
 export default function DataTable({ columns, rows }) {
   const [page, setPage] = useState(0)
@@ -17,7 +32,7 @@ export default function DataTable({ columns, rows }) {
   const lastRowNumber = Math.min(firstRowNumber + PAGE_SIZE - 1, rows.length)
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/3">
+    <Card>
       <div className="overflow-x-auto">
         <table className="w-full border-collapse text-left text-sm">
           <thead>
@@ -70,29 +85,25 @@ export default function DataTable({ columns, rows }) {
         </p>
 
         <div className="flex items-center gap-1">
-          <button
-            type="button"
-            aria-label="Página anterior"
+          <PageButton
+            label="Página anterior"
             disabled={safePage === 0}
             onClick={() => setPage(safePage - 1)}
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-300 transition-colors hover:bg-white/10 disabled:cursor-not-allowed disabled:text-slate-600 disabled:hover:bg-transparent"
           >
             <ChevronLeftIcon className="h-4 w-4" />
-          </button>
+          </PageButton>
           <span className="px-2 text-xs text-slate-400 tabular-nums">
             {safePage + 1} / {pageCount}
           </span>
-          <button
-            type="button"
-            aria-label="Página siguiente"
+          <PageButton
+            label="Página siguiente"
             disabled={safePage >= pageCount - 1}
             onClick={() => setPage(safePage + 1)}
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-300 transition-colors hover:bg-white/10 disabled:cursor-not-allowed disabled:text-slate-600 disabled:hover:bg-transparent"
           >
             <ChevronRightIcon className="h-4 w-4" />
-          </button>
+          </PageButton>
         </div>
       </div>
-    </div>
+    </Card>
   )
 }

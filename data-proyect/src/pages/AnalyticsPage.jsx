@@ -8,6 +8,8 @@ import StatTile from '../components/analytics/StatTile'
 import ColumnsTable from '../components/analytics/ColumnsTable'
 import DataTable from '../components/analytics/DataTable'
 import DistributionChart from '../components/analytics/DistributionChart'
+import Button from '../components/ui/Button'
+import { buttonClass } from '../components/ui/buttonClass'
 import {
   AlertTriangleIcon,
   ChartBarIcon,
@@ -49,10 +51,7 @@ function EmptyState() {
       <p className="mt-3 text-sm text-slate-400">
         Sube un archivo .csv o .xlsx para ver aquí su perfil, sus columnas y sus filas.
       </p>
-      <Link
-        to="/"
-        className="mt-7 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 text-sm font-bold tracking-wide text-white uppercase transition-colors hover:bg-blue-500"
-      >
+      <Link to="/" className={buttonClass({ size: 'lg', className: 'mt-7' })}>
         Subir un archivo
       </Link>
     </CenteredPanel>
@@ -106,20 +105,12 @@ function DatasetAnalytics({ dataset, onClearDataset }) {
         </p>
         <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
           {!isExpired && (
-            <button
-              type="button"
-              onClick={reload}
-              className="inline-flex items-center gap-2 rounded-lg border border-white/10 px-5 py-3 text-sm font-semibold text-slate-200 transition-colors hover:bg-white/5"
-            >
+            <Button variant="secondary" size="lg" onClick={reload}>
               <RefreshIcon className="h-4 w-4" />
               Reintentar
-            </button>
+            </Button>
           )}
-          <Link
-            to="/"
-            onClick={onClearDataset}
-            className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-3 text-sm font-bold tracking-wide text-white uppercase transition-colors hover:bg-blue-500"
-          >
+          <Link to="/" onClick={onClearDataset} className={buttonClass({ size: 'lg' })}>
             Subir otro archivo
           </Link>
         </div>
@@ -162,18 +153,11 @@ function DatasetAnalytics({ dataset, onClearDataset }) {
           </div>
 
           <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={reload}
-              className="inline-flex items-center gap-2 rounded-lg border border-white/10 px-4 py-2.5 text-sm font-semibold text-slate-200 transition-colors hover:bg-white/5"
-            >
+            <Button variant="secondary" onClick={reload}>
               <RefreshIcon className="h-4 w-4" />
               Recargar
-            </button>
-            <Link
-              to="/"
-              className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-500"
-            >
+            </Button>
+            <Link to="/" className={buttonClass()}>
               Nuevo archivo
             </Link>
           </div>
