@@ -113,6 +113,24 @@ La API aplica estas medidas:
 
 Además, los errores nunca exponen detalles internos (un fallo inesperado responde un mensaje genérico) y los identificadores de dataset se validan como UUID.
 
+### Revisión de dependencias
+
+Las dependencias se revisan con `npm audit` en cada proyecto:
+
+```bash
+cd backend && npm audit
+cd ../data-proyect && npm audit
+```
+
+Última revisión (2026-11-22):
+
+| Proyecto | Resultado | Qué se hizo |
+|---|---|---|
+| `backend` | 0 vulnerabilidades | Al elegir la librería para leer `.xlsx` se descartó `exceljs` porque arrastraba una dependencia vulnerable (`uuid`), y se usó `read-excel-file`, que sale limpia. |
+| `data-proyect` | 7 vulnerabilidades (4 altas, 3 moderadas) antes; 0 después | Eran dependencias indirectas (`vite`, `source-map-js`, `brace-expansion`, `minimatch`, `zod`). Se corrigieron con `npm audit fix` (sin `--force`, sin cambios incompatibles); solo cambió `package-lock.json`. Se comprobó que `npm run lint` y `npm run build` siguen pasando. |
+
+Cada vez que se agregue o actualice una dependencia hay que volver a correr `npm audit` y no integrar cambios con vulnerabilidades altas o críticas.
+
 ## Endpoints de la API
 
 URL base en local: `http://127.0.0.1:8000`.
