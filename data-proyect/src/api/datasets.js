@@ -47,6 +47,17 @@ export function getFullDataset(datasetId, { signal } = {}) {
   return request(`/datasets/${datasetId}/full`, { signal })
 }
 
-export function getPreview(datasetId, { signal } = {}) {
-  return request(`/datasets/${datasetId}/preview`, { signal })
+/**
+ * Estadisticas descriptivas de las columnas numericas, calculadas por el backend.
+ * Devuelve { dataset_id, columnas: { [columna]: { media, minimo, maximo, ... } } }.
+ * Si el dataset no tiene columnas numericas el backend responde 400: eso no es un
+ * fallo, solo significa que no hay estadisticas, asi que se devuelve `columnas` vacio.
+ */
+export async function getSummary(datasetId, { signal } = {}) {
+  try {
+    return await request(`/datasets/${datasetId}/summary`, { signal })
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 400) return { columnas: {} }
+    throw error
+  }
 }

@@ -1,2 +1,18 @@
 __pycache__/
 *.pyc
+
+# Node
+node_modules/
+dist/
+
+# Variables de entorno (los .env.example si se versionan)
+.env
+.env.*
+!.env.example
+
+# Comprimidos
+*.zip
+
+# Sistema operativo
+.DS_Store
+Thumbs.db

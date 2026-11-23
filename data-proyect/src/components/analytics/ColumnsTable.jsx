@@ -1,4 +1,5 @@
 import { formatCount, formatNumber, formatPercent } from '../../lib/format'
+import Card from '../ui/Card'
 
 const KIND_LABELS = {
   numeric: 'Numérica',
@@ -54,7 +55,7 @@ function NullMeter({ nulls, nullPct }) {
 
 export default function ColumnsTable({ columnProfiles }) {
   return (
-    <div className="overflow-x-auto rounded-2xl border border-white/10 bg-white/3">
+    <Card className="overflow-x-auto">
       <table className="w-full min-w-[52rem] border-collapse text-left text-sm">
         <thead>
           <tr className="border-b border-white/10 text-xs tracking-wide text-slate-400 uppercase">
@@ -104,6 +105,6 @@ export default function ColumnsTable({ columnProfiles }) {
           ))}
         </tbody>
       </table>
-    </div>
+    </Card>
   )
 }
