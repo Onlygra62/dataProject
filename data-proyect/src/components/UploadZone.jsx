@@ -1,10 +1,8 @@
 import { useRef, useState } from 'react'
+import { ACCEPTED_EXTENSIONS, MAX_FILE_SIZE, MAX_FILE_SIZE_MB } from '../lib/constants'
 import { formatBytes } from '../lib/format'
 import { FileUploadIcon, PlusIcon, SpinnerIcon, XIcon } from './icons'
 import Button from './ui/Button'
-
-const ACCEPTED_EXTENSIONS = ['.xlsx', '.csv']
-const MAX_FILE_SIZE = 500 * 1024 * 1024 // 500MB
 
 function getExtension(filename) {
   const dotIndex = filename.lastIndexOf('.')
@@ -16,7 +14,7 @@ function validateFile(file) {
     return 'Formato no compatible. Sube un archivo .xlsx o .csv.'
   }
   if (file.size > MAX_FILE_SIZE) {
-    return 'El archivo supera el límite de 500MB.'
+    return `El archivo supera el límite de ${MAX_FILE_SIZE_MB}MB.`
   }
   return null
 }
@@ -114,7 +112,7 @@ export default function UploadZone({ onFileAccepted, isUploading = false, upload
         </h2>
         <p className="mt-3 max-w-md text-sm text-slate-400">
           Drag and drop your .xlsx or .csv files here, or click to browse your local machine.
-          Maximum file size: 500MB.
+          Maximum file size: {MAX_FILE_SIZE_MB}MB.
         </p>
 
         <Button

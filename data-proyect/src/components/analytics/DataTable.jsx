@@ -1,9 +1,8 @@
 import { useState } from 'react'
 import { ChevronLeftIcon, ChevronRightIcon } from '../icons'
+import { TABLE_PAGE_SIZE as PAGE_SIZE } from '../../lib/constants'
 import { formatCell, formatCount } from '../../lib/format'
 import Card from '../ui/Card'
-
-const PAGE_SIZE = 25
 
 function PageButton({ label, disabled, onClick, children }) {
   return (

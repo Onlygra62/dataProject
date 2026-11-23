@@ -193,7 +193,7 @@ function DatasetAnalytics({ dataset, onClearDataset }) {
                     className="max-w-56 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-200 outline-none focus:border-blue-500"
                   >
                     {profile.columnProfiles.map((column) => (
-                      <option key={column.name} value={column.name} className="bg-[#0a0e1a]">
+                      <option key={column.name} value={column.name} className="bg-surface-raised">
                         {column.name}
                       </option>
                     ))}
