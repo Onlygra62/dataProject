@@ -30,6 +30,13 @@ export class PayloadTooLargeError extends AppError {
   }
 }
 
+// 429: el cliente hizo demasiadas peticiones en poco tiempo
+export class TooManyRequestsError extends AppError {
+  constructor(message = 'Demasiadas peticiones. Intenta de nuevo en un momento.') {
+    super(message, 429);
+  }
+}
+
 // 404: el recurso pedido no existe (por ejemplo, un dataset que no esta en memoria)
 export class NotFoundError extends AppError {
   constructor(message = 'Recurso no encontrado.') {
