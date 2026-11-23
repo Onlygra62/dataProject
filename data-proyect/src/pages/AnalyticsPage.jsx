@@ -1,13 +1,14 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Link } from 'react-router'
-import { getFullDataset } from '../api/datasets'
 import { useDataset } from '../context/DatasetContext'
+import { useDatasetRows } from '../hooks/useDatasetRows'
 import { profileDataset } from '../lib/profile'
 import { formatBytes, formatCount, formatPercent } from '../lib/format'
 import StatTile from '../components/analytics/StatTile'
 import ColumnsTable from '../components/analytics/ColumnsTable'
 import DataTable from '../components/analytics/DataTable'
 import DistributionChart from '../components/analytics/DistributionChart'
+import { EmptyState, ErrorPanel, LoadingPanel } from '../components/analytics/StatePanels'
 import Button from '../components/ui/Button'
 import { buttonClass } from '../components/ui/buttonClass'
 import {
@@ -17,17 +18,8 @@ import {
   CopyIcon,
   RefreshIcon,
   RowsIcon,
-  SpinnerIcon,
   TableIcon,
 } from '../components/icons'
-
-function CenteredPanel({ children }) {
-  return (
-    <div className="flex flex-1 items-center justify-center px-6 py-16">
-      <div className="max-w-md text-center">{children}</div>
-    </div>
-  )
-}
 
 function SectionTitle({ icon: Icon, children, aside }) {
   return (
@@ -41,91 +33,18 @@ function SectionTitle({ icon: Icon, children, aside }) {
   )
 }
 
-function EmptyState() {
-  return (
-    <CenteredPanel>
-      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-white/5 ring-1 ring-white/10">
-        <ChartBarIcon className="h-7 w-7 text-slate-300" />
-      </div>
-      <h2 className="mt-6 text-2xl font-bold text-slate-100">Todavía no hay datos</h2>
-      <p className="mt-3 text-sm text-slate-400">
-        Sube un archivo .csv o .xlsx para ver aquí su perfil, sus columnas y sus filas.
-      </p>
-      <Link to="/" className={buttonClass({ size: 'lg', className: 'mt-7' })}>
-        Subir un archivo
-      </Link>
-    </CenteredPanel>
-  )
-}
-
 function DatasetAnalytics({ dataset, onClearDataset }) {
-  const [rows, setRows] = useState(null)
-  const [error, setError] = useState(null)
-  const [reloadToken, setReloadToken] = useState(0)
+  const { rows, error, reload } = useDatasetRows(dataset.id)
   const [selectedColumn, setSelectedColumn] = useState(null)
-
-  // Volver a "cargando" se hace aqui, en el manejador, para no tocar estado
-  // sincronamente dentro del efecto.
-  const reload = useCallback(() => {
-    setRows(null)
-    setError(null)
-    setReloadToken((token) => token + 1)
-  }, [])
-
-  useEffect(() => {
-    const controller = new AbortController()
-
-    getFullDataset(dataset.id, { signal: controller.signal })
-      .then(setRows)
-      .catch((requestError) => {
-        if (!controller.signal.aborted) setError(requestError)
-      })
-
-    return () => controller.abort()
-  }, [dataset.id, reloadToken])
 
   // Perfilar recorre todas las filas, asi que solo se recalcula al cambiar los datos.
   const profile = useMemo(() => (rows ? profileDataset(rows) : null), [rows])
 
   if (error) {
-    // El backend guarda los datasets en memoria: si se reinicia, el id ya no existe.
-    const isExpired = error.status === 404
-    return (
-      <CenteredPanel>
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-white/5 ring-1 ring-white/10">
-          <AlertTriangleIcon className="h-7 w-7" style={{ color: 'var(--viz-critical)' }} />
-        </div>
-        <h2 className="mt-6 text-2xl font-bold text-slate-100">
-          {isExpired ? 'El dataset ya no está disponible' : 'No se pudieron cargar los datos'}
-        </h2>
-        <p className="mt-3 text-sm text-slate-400">
-          {isExpired
-            ? 'El servidor guarda los datasets en memoria, así que se pierden al reiniciarlo. Sube el archivo de nuevo.'
-            : error.message}
-        </p>
-        <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
-          {!isExpired && (
-            <Button variant="secondary" size="lg" onClick={reload}>
-              <RefreshIcon className="h-4 w-4" />
-              Reintentar
-            </Button>
-          )}
-          <Link to="/" onClick={onClearDataset} className={buttonClass({ size: 'lg' })}>
-            Subir otro archivo
-          </Link>
-        </div>
-      </CenteredPanel>
-    )
+    return <ErrorPanel error={error} onRetry={reload} onUploadAnother={onClearDataset} />
   }
 
-  if (!profile) {
-    return (
-      <CenteredPanel>
-        <SpinnerIcon className="mx-auto h-8 w-8 animate-spin text-slate-400" />
-        <p className="mt-4 text-sm text-slate-400">Cargando {dataset.name}…</p>
-      </CenteredPanel>
-    )
-  }
+  if (!profile) return <LoadingPanel name={dataset.name} />
 
   const emptyCellPct = profile.totalCells
     ? (profile.totalNulls / profile.totalCells) * 100
