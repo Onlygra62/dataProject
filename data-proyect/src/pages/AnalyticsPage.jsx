@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router'
 import { useDataset } from '../context/DatasetContext'
-import { useDatasetRows } from '../hooks/useDatasetRows'
+import { useDatasetData } from '../hooks/useDatasetData'
 import { profileDataset } from '../lib/profile'
 import { formatBytes, formatCount, formatPercent } from '../lib/format'
 import StatTile from '../components/analytics/StatTile'
@@ -34,11 +34,14 @@ function SectionTitle({ icon: Icon, children, aside }) {
 }
 
 function DatasetAnalytics({ dataset, onClearDataset }) {
-  const { rows, error, reload } = useDatasetRows(dataset.id)
+  const { rows, summary, error, reload } = useDatasetData(dataset.id)
   const [selectedColumn, setSelectedColumn] = useState(null)
 
   // Perfilar recorre todas las filas, asi que solo se recalcula al cambiar los datos.
-  const profile = useMemo(() => (rows ? profileDataset(rows) : null), [rows])
+  const profile = useMemo(
+    () => (rows && summary ? profileDataset(rows, summary) : null),
+    [rows, summary],
+  )
 
   if (error) {
     return <ErrorPanel error={error} onRetry={reload} onUploadAnother={onClearDataset} />
