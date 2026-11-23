@@ -22,6 +22,10 @@ function getExtension(filename) {
   return path.extname(filename ?? '').toLowerCase();
 }
 
+export function isSupportedFile(filename) {
+  return SUPPORTED_EXTENSIONS.includes(getExtension(filename));
+}
+
 // El CSV llega todo como texto: se decide el tipo por columna. Si todos los valores no
 // vacios son numeros la columna es numerica, si todos son true/false es booleana y en
 // cualquier otro caso se queda como texto.

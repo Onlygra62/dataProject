@@ -23,6 +23,13 @@ export class FormatoInvalidoError extends BadRequestError {
   }
 }
 
+// 413: el archivo subido supera el tamano maximo permitido
+export class PayloadTooLargeError extends AppError {
+  constructor(message = 'El archivo es demasiado grande.') {
+    super(message, 413);
+  }
+}
+
 // 404: el recurso pedido no existe (por ejemplo, un dataset que no esta en memoria)
 export class NotFoundError extends AppError {
   constructor(message = 'Recurso no encontrado.') {
