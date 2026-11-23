@@ -6,9 +6,9 @@ Aplicación web para analizar datasets: el usuario sube un archivo `.csv` o `.xl
 
 | Integrante | A qué se dedicó |
 |---|---|
-| Daniel Maldonado | _completar_ |
-| Juan Turizo | _completar_ |
-| Juan Gonzalez | _completar_ |
+| Daniel Maldonado | 
+| Juan Turizo 
+| Juan Gonzalez 
 
 ### Flujo de trabajo del equipo (Git)
 
