@@ -14,7 +14,7 @@ function calcularPromedio(notas) {
 
 function estaAprobado(promedio) { return promedio >= NOTA_MINIMA; }
 
-const s = http.createServer((req, res) => {
+const server = http.createServer((req, res) => {
 
     if (req.url === '/salud') {
         return respuesta(res, 200, { estado: 'ok' });
@@ -33,4 +33,4 @@ const s = http.createServer((req, res) => {
     respuesta(res, 404, { error: 'Ruta no encontrada' });
 });
 
-s.listen(80);
+server.listen(80);

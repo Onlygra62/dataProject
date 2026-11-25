@@ -6,9 +6,9 @@ Aplicación web para analizar datasets: el usuario sube un archivo `.csv` o `.xl
 
 | Integrante | A qué se dedicó |
 |---|---|
-| Daniel Maldonado | 
-| Juan Turizo 
-| Juan Gonzalez 
+| Daniel Maldonado | Backend original, montura en S3 y EC2 |
+| Juan Turizo | Frontend, reescritura del backend |
+| Juan Gonzalez | Mejoramiento del backend, verificación de funcionamiento |
 
 ### Flujo de trabajo del equipo (Git)
 
@@ -160,15 +160,27 @@ curl http://127.0.0.1:8000/datasets/3f2b8c1e-.../summary
 cd backend
 npm test
 ```
+Debería dejarte algo así:
 
-> **Pendiente:** las pruebas automáticas con Vitest las agrega el resto del equipo; hasta entonces `npm test` no existe. Los archivos de ejemplo ya están en `backend/tests/fixtures/`. Al agregarlas, actualizar esta sección con los comandos reales y los resultados.
+```bash
+ RUN  v5.1.1 C:/Directorio/del/proyecto/dataProject/backend
+
+ ✓ tests/descriptiveStats.test.js (5 tests) 15ms
+ ✓ tests/ingest.test.js (5 tests) 28ms
+ ✓ tests/api.test.js (8 tests) 274ms
+
+ Test Files  3 passed (3)
+      Tests  18 passed (18)
+   Start at  22:45:02
+   Duration  3.04s (import 65%, transform 23%, tests 10%, worker 2%)
+```
 
 ## Despliegue
 
-> **Pendiente:** el despliegue en AWS (front en S3 y API en EC2) lo completa el resto del equipo. Al terminarlo, documentar aquí dónde está publicado (URLs) y los pasos exactos para volver a desplegarlo.
+> LOS LINKS DE LA API Y EL FRONTEND NO ESTÁN DISPONIBLES PUES SE CERRARON SUS INSTANCIAS DE AWS
 
-Para quien despliegue, lo que hay que tener en cuenta del código:
-
-- **API (EC2)**: definir `CORS_ORIGIN` con la URL donde se publica el front y `PORT`; arrancar con `npm start`. Abrir en el Security Group solo el puerto de la API.
-- **Front (S3)**: compilar con `VITE_API_URL` apuntando a la API publicada (`npm run build` genera la carpeta `dist/`) y subir su contenido al bucket. El front usa rutas de React Router, así que el hosting debe devolver `index.html` cuando una ruta como `/analytics` no exista como archivo.
+- **API (EC2)**: `(Cerrado)` Primero fue montando en Python pero luego se reescribio para Nodejs con Express. El despliegue fue un poco más complicado de realizar debido a la naturaleza de nuestro backend.
+- **Front (S3)**: `(Cerrado)` Frontend hecho con React y compilado con Vite. Solo se subio lo compilado, no todo el proyecto con las variables de ambiente.
 - **Almacenamiento**: la API guarda los datasets en memoria; la decisión de pasar a S3 está en [docs/adr-001-almacenamiento.md](docs/adr-001-almacenamiento.md).
+
+
