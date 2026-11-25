@@ -1,2 +1,0 @@
-pip install "pandas[excel]"
-pip install "fastapi[standard]"

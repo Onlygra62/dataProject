@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+/* Superficies de la app. Se usan como bg-surface y bg-surface-raised: asi el color vive
+   solo aqui y no repetido como bg-[#080b14] en cada componente. */
+@theme {
+  --color-surface: #080b14;
+  --color-surface-raised: #0a0e1a;
+}
+
 html,
 body,
 #root {
@@ -7,13 +14,14 @@ body,
 }
 
 body {
-  background-color: #080b14;
+  background-color: var(--color-surface);
   color-scheme: dark;
 }
 
 /* Tokens de visualizacion. La app es dark-only, asi que se definen una sola vez.
-   Estos pasos estan validados contra la superficie #0a0e1a: los cuatro tipos
-   pasan banda de luminosidad, piso de croma, separacion CVD y contraste >= 3:1. */
+   Estos pasos estan validados contra la superficie --color-surface-raised: los cuatro tipos
+   pasan banda de luminosidad, piso de croma, separacion CVD y contraste >= 3:1.
+   Los graficos de Chart.js leen estos mismos valores (ver chartTheme.js). */
 :root {
   --viz-numeric: #3987e5;
   --viz-categorical: #d95926;
