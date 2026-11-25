@@ -5,6 +5,7 @@
  * spread: un dataset grande revienta la pila de llamadas con esa forma.
  */
 
+import { MAX_HISTOGRAM_BINS, MAX_TIMELINE_POINTS, MAX_TOP_CATEGORIES } from './constants'
 import { formatNumber } from './format'
 
 function extent(values) {
@@ -26,7 +27,7 @@ function niceStep(rough) {
   return nice * magnitude
 }
 
-export function histogram(values, maxBins = 20) {
+export function histogram(values, maxBins = MAX_HISTOGRAM_BINS) {
   if (values.length === 0) return []
 
   const [min, max] = extent(values)
@@ -53,7 +54,7 @@ export function histogram(values, maxBins = 20) {
 }
 
 /** Categorias mas frecuentes; el resto se pliega en "Otros" en vez de alargar el eje. */
-export function topCategories(values, limit = 12) {
+export function topCategories(values, limit = MAX_TOP_CATEGORIES) {
   const counts = new Map()
   for (const value of values) {
     const key = String(value)
@@ -70,7 +71,7 @@ export function topCategories(values, limit = 12) {
 }
 
 /** Conteo por fecha, agrupando por mes cuando hay demasiados dias distintos. */
-export function timeCounts(values, maxPoints = 60) {
+export function timeCounts(values, maxPoints = MAX_TIMELINE_POINTS) {
   const byDay = new Map()
   for (const value of values) {
     const day = String(value).slice(0, 10)

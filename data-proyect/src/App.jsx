@@ -6,7 +6,7 @@ import DatasetProvider from './context/DatasetProvider'
 export default function App() {
   return (
     <DatasetProvider>
-      <div className="flex h-screen bg-[#080b14]">
+      <div className="flex h-screen bg-surface">
         <Sidebar />
         <div className="flex flex-1 flex-col overflow-hidden">
           <Header />

@@ -1,8 +1,10 @@
 /**
  * Perfilado de datasets en el cliente.
  *
- * El backend expone las filas crudas en /datasets/{id}/full, asi que las
- * estadisticas se calculan aqui a partir de esos registros.
+ * El backend entrega las filas crudas (/datasets/{id}/full) y las estadisticas de las
+ * columnas numericas (/datasets/{id}/summary). Aqui se calcula lo que el backend no
+ * ofrece (tipos, vacios, unicos, duplicados) y se combina con esas estadisticas, para
+ * no repetir en el cliente la media, el minimo o el maximo.
  */
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}([T ]\d{2}:\d{2}(:\d{2})?)?/
@@ -31,23 +33,14 @@ function inferKind(values) {
   return 'categorical'
 }
 
-function numericStats(values) {
-  const sorted = [...values].sort((a, b) => a - b)
-  const count = sorted.length
-  const mean = values.reduce((total, value) => total + value, 0) / count
-  // Varianza muestral (n-1), igual que el std por defecto de pandas.
-  const variance =
-    count > 1
-      ? values.reduce((total, value) => total + (value - mean) ** 2, 0) / (count - 1)
-      : 0
-  const middle = Math.floor(count / 2)
-
+/** Traduce las estadisticas del backend (en espanol) a los campos del perfil. */
+function fromBackendStats(stats) {
   return {
-    min: sorted[0],
-    max: sorted[count - 1],
-    mean,
-    median: count % 2 === 1 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2,
-    std: Math.sqrt(variance),
+    min: stats.minimo,
+    max: stats.maximo,
+    mean: stats.media,
+    median: stats.mediana,
+    std: stats.desviacion_estandar,
   }
 }
 
@@ -69,7 +62,7 @@ function mostFrequent(values) {
   return { top, topCount, unique: counts.size }
 }
 
-function profileColumn(name, rows) {
+function profileColumn(name, rows, backendStats) {
   const values = []
   let nulls = 0
 
@@ -100,7 +93,8 @@ function profileColumn(name, rows) {
   if (values.length === 0) return column
 
   if (kind === 'numeric') {
-    Object.assign(column, numericStats(values))
+    // Si el backend no entrego estadisticas para la columna, quedan en null (se muestran como "—").
+    if (backendStats) Object.assign(column, fromBackendStats(backendStats))
   } else if (kind === 'datetime') {
     const sorted = [...values].sort()
     column.min = sorted[0]
@@ -125,10 +119,14 @@ function countDuplicateRows(rows, columns) {
   return duplicates
 }
 
-/** Construye el perfil completo del dataset a partir de las filas del backend. */
-export function profileDataset(rows) {
+/**
+ * Construye el perfil completo del dataset.
+ * @param {object[]} rows - filas del backend.
+ * @param {object} numericStats - `columnas` de /summary: estadisticas por columna numerica.
+ */
+export function profileDataset(rows, numericStats = {}) {
   const columns = rows.length > 0 ? Object.keys(rows[0]) : []
-  const columnProfiles = columns.map((name) => profileColumn(name, rows))
+  const columnProfiles = columns.map((name) => profileColumn(name, rows, numericStats[name]))
 
   return {
     rowCount: rows.length,

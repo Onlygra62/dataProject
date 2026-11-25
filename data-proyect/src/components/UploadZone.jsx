@@ -1,16 +1,8 @@
 import { useRef, useState } from 'react'
+import { ACCEPTED_EXTENSIONS, MAX_FILE_SIZE, MAX_FILE_SIZE_MB } from '../lib/constants'
+import { formatBytes } from '../lib/format'
 import { FileUploadIcon, PlusIcon, SpinnerIcon, XIcon } from './icons'
-
-const ACCEPTED_EXTENSIONS = ['.xlsx', '.csv']
-const MAX_FILE_SIZE = 500 * 1024 * 1024 // 500MB
-
-function formatBytes(bytes) {
-  if (bytes === 0) return '0 B'
-  const units = ['B', 'KB', 'MB', 'GB']
-  const exponent = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1)
-  const value = bytes / 1024 ** exponent
-  return `${value.toFixed(exponent === 0 ? 0 : 1)} ${units[exponent]}`
-}
+import Button from './ui/Button'
 
 function getExtension(filename) {
   const dotIndex = filename.lastIndexOf('.')
@@ -22,7 +14,7 @@ function validateFile(file) {
     return 'Formato no compatible. Sube un archivo .xlsx o .csv.'
   }
   if (file.size > MAX_FILE_SIZE) {
-    return 'El archivo supera el límite de 500MB.'
+    return `El archivo supera el límite de ${MAX_FILE_SIZE_MB}MB.`
   }
   return null
 }
@@ -120,17 +112,17 @@ export default function UploadZone({ onFileAccepted, isUploading = false, upload
         </h2>
         <p className="mt-3 max-w-md text-sm text-slate-400">
           Drag and drop your .xlsx or .csv files here, or click to browse your local machine.
-          Maximum file size: 500MB.
+          Maximum file size: {MAX_FILE_SIZE_MB}MB.
         </p>
 
-        <button
-          type="button"
+        <Button
+          size="lg"
+          className="mt-7"
           onClick={(selectFilesClickEvent) => {
             selectFilesClickEvent.stopPropagation()
             handleBrowseClick()
           }}
           disabled={isUploading}
-          className="mt-7 flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 text-sm font-bold tracking-wide text-white uppercase transition-colors hover:bg-blue-500 disabled:cursor-wait disabled:bg-blue-600/50"
         >
           {isUploading ? (
             <>
@@ -143,7 +135,7 @@ export default function UploadZone({ onFileAccepted, isUploading = false, upload
               Select files
             </>
           )}
-        </button>
+        </Button>
 
         {shownError && (
           <p role="alert" className="mt-4 text-sm font-medium text-red-400">

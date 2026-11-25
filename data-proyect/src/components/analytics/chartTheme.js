@@ -1,22 +1,34 @@
 /**
  * Tema compartido de Chart.js.
  *
- * La app es dark-only, asi que los valores estan fijados contra la superficie
- * #0a0e1a. Rejilla y ejes son recesivos: el dato es lo que debe destacar.
+ * La app es dark-only. Rejilla y ejes son recesivos: el dato es lo que debe destacar.
+ * Los colores de la serie y de los ejes salen de los tokens --viz-* de index.css, para
+ * que el grafico y el resto de la interfaz usen siempre el mismo valor.
  */
 
-export const SERIES_COLOR = '#3987e5'
-export const GRID_COLOR = 'rgba(255, 255, 255, 0.06)'
-export const TICK_COLOR = '#898781'
+const AXIS_LABEL_MAX_CHARS = 22
 
-export const BAR_STYLE = {
-  backgroundColor: SERIES_COLOR,
-  hoverBackgroundColor: '#5598e7',
-  borderRadius: 4,
-  borderSkipped: false,
-  // Deja ~2px de superficie entre barras contiguas.
-  categoryPercentage: 0.86,
-  barPercentage: 0.92,
+/**
+ * Chart.js pinta en un canvas, que no entiende var(--token). Por eso se lee el valor
+ * del token en el momento de dibujar (y no al importar el modulo, cuando el CSS aun
+ * podria no estar cargado).
+ */
+function token(name) {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim()
+}
+
+const GRID_COLOR = 'rgba(255, 255, 255, 0.06)'
+
+export function barStyle() {
+  return {
+    backgroundColor: token('--viz-numeric'),
+    hoverBackgroundColor: '#5598e7',
+    borderRadius: 4,
+    borderSkipped: false,
+    // Deja ~2px de superficie entre barras contiguas.
+    categoryPercentage: 0.86,
+    barPercentage: 0.92,
+  }
 }
 
 const TOOLTIP = {
@@ -29,34 +41,42 @@ const TOOLTIP = {
   displayColors: false,
 }
 
-const BASE_TICKS = {
-  color: TICK_COLOR,
-  font: { size: 11 },
-  padding: 8,
-  autoSkipPadding: 12,
+function baseTicks() {
+  return {
+    color: token('--viz-empty'),
+    font: { size: 11 },
+    padding: 8,
+    autoSkipPadding: 12,
+  }
 }
 
 /** Eje de categorias: sin rejilla (seria ruido) y con etiquetas recortadas. */
-const categoryAxis = {
-  grid: { display: false },
-  border: { display: false },
-  ticks: {
-    ...BASE_TICKS,
-    maxRotation: 0,
-    callback(value) {
-      const label = this.getLabelForValue(value)
-      if (typeof label !== 'string') return label
-      return label.length > 22 ? `${label.slice(0, 21)}…` : label
+function categoryAxis() {
+  return {
+    grid: { display: false },
+    border: { display: false },
+    ticks: {
+      ...baseTicks(),
+      maxRotation: 0,
+      callback(value) {
+        const label = this.getLabelForValue(value)
+        if (typeof label !== 'string') return label
+        return label.length > AXIS_LABEL_MAX_CHARS
+          ? `${label.slice(0, AXIS_LABEL_MAX_CHARS - 1)}…`
+          : label
+      },
     },
-  },
+  }
 }
 
 /** Eje de magnitud: anclado en cero y con rejilla tenue. */
-const valueAxis = {
-  beginAtZero: true,
-  grid: { display: true, color: GRID_COLOR, drawTicks: false },
-  border: { display: false },
-  ticks: BASE_TICKS,
+function valueAxis() {
+  return {
+    beginAtZero: true,
+    grid: { display: true, color: GRID_COLOR, drawTicks: false },
+    border: { display: false },
+    ticks: baseTicks(),
+  }
 }
 
 /**
@@ -84,7 +104,7 @@ export function barOptions(indexAxis = 'x') {
       },
     },
     scales: isHorizontal
-      ? { x: valueAxis, y: categoryAxis }
-      : { x: categoryAxis, y: valueAxis },
+      ? { x: valueAxis(), y: categoryAxis() }
+      : { x: categoryAxis(), y: valueAxis() },
   }
 }

@@ -8,7 +8,7 @@ const navItems = [
 
 export default function Sidebar() {
   return (
-    <aside className="flex h-full w-16 flex-col items-center justify-between border-r border-white/5 bg-[#0a0e1a] py-4">
+    <aside className="flex h-full w-16 flex-col items-center justify-between border-r border-white/5 bg-surface-raised py-4">
       <div className="flex flex-col items-center gap-2">
         <div className="mb-2 flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 text-slate-300">
           <ChartBarIcon className="h-5 w-5" />
